@@ -33,6 +33,7 @@ namespace Task_Organizer {
                     // if Parent is null then the node is a root node
                     if(newTaskNode.Parent != null)
                         newTaskNode.Parent.Expand();
+                    outputTreeView.SelectedNode = null;
                     outputTreeView.EndUpdate();
                 }
             }
