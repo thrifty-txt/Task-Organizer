@@ -13,18 +13,28 @@ namespace Task_Organizer {
             Name = name;
             Description = description;
         }
-        private int DetermineDepth() {
+        /*private int DetermineDepth() {
             int d = 0;
             for (GenericTask node = Parent; node != null; node = node.Parent)
                 d++;
             return d;
-        }
+        }*/
         public override String ToString() {
             string output = Name;
             if (!string.IsNullOrEmpty(Description)) {
                 output += $": {Description}";
             }
             return output.Trim();
+        }
+        private string SanitizeString(string str) {
+            var splitStr = str.Split(',');
+            for(int i = 0; i < splitStr.Length - 1; i++) {
+                splitStr[i] += "\\,";
+            }
+            return string.Join(null, splitStr);
+        }
+        public String Serialize() {
+            return $"{SanitizeString(Name)},{SanitizeString(Description)}";
         }
     }
 }
