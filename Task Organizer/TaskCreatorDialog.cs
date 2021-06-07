@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace Task_Organizer {
     public partial class TaskCreatorDialog : Form {
-        private GenericTask taskParent;
-        public TaskCreatorDialog(GenericTask parent) {
+        private TreeNode Node;
+        public TaskCreatorDialog(TreeNode node) {
             InitializeComponent();
-            taskParent = parent;
+            Node = node;
         }
 
         private void CreateButton_Click(object sender, EventArgs e) {
@@ -25,10 +25,12 @@ namespace Task_Organizer {
                 return;
             }
             taskParent.NewChild(nameBox.Text.Trim(), descBox.Text.Trim());
+            DialogResult = DialogResult.OK;
             Close();
         }
 
         private void CancelButton_Click(object sender, EventArgs e) {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
     }
