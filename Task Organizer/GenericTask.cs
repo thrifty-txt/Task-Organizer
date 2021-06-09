@@ -26,15 +26,8 @@ namespace Task_Organizer {
             }
             return output.Trim();
         }
-        private string SanitizeString(string str) {
-            var splitStr = str.Split(',');
-            for(int i = 0; i < splitStr.Length - 1; i++) {
-                splitStr[i] += "\\,";
-            }
-            return string.Join(null, splitStr);
-        }
         public String Serialize() {
-            return $"{SanitizeString(Name)},{SanitizeString(Description)}";
+            return $"{Name.Length} {Name} {Description.Length} {Description}";
         }
     }
 }

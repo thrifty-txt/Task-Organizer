@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Task_Organizer {
     public partial class TaskCreatorDialog : Form {
-        private TreeNode Node;
+        private readonly TreeNode Node;
         public TaskCreatorDialog(TreeNode node) {
             InitializeComponent();
             Node = node;
@@ -18,7 +18,7 @@ namespace Task_Organizer {
 
         private void CreateButton_Click(object sender, EventArgs e) {
             if (string.IsNullOrEmpty(nameBox.Text.Trim())) {
-                if(badUserPrompt.Visible == true) {
+                if (badUserPrompt.Visible == true) {
                     badUserPrompt.Text += "!";
                 }
                 badUserPrompt.Visible = true;
