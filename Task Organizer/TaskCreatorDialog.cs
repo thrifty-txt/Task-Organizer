@@ -10,10 +10,9 @@ using System.Windows.Forms;
 
 namespace Task_Organizer {
     public partial class TaskCreatorDialog : Form {
-        private readonly TreeNode Node;
-        public TaskCreatorDialog(TreeNode node) {
+        public GenericTask Task;
+        public TaskCreatorDialog() {
             InitializeComponent();
-            Node = node;
         }
 
         private void CreateButton_Click(object sender, EventArgs e) {
@@ -24,7 +23,7 @@ namespace Task_Organizer {
                 badUserPrompt.Visible = true;
                 return;
             }
-            Node.Tag = new GenericTask(nameBox.Text.Trim(), descBox.Text.Trim());
+            Task = new GenericTask(nameBox.Text.Trim(), descBox.Text.Trim());
             DialogResult = DialogResult.OK;
             Close();
         }

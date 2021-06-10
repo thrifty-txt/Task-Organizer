@@ -15,34 +15,43 @@ namespace Task_Organizer {
         public MainForm() {
             InitializeComponent();
         }
+        private TreeNode NewTaskNode(GenericTask task, TreeNodeCollection parent) {
+            var node = new TreeNode(task.ToString()) {
+                Tag = task
+            };
+            outputTreeView.BeginUpdate();
+            parent.Add(node);
+            // Nodes seem to be collapsed by default, 
+            // this will make sure that the node will expand
+            // if Parent is null then the node is a root node
+            if (node.Parent != null) {
+                node.Parent.Expand();
+            }
+            outputTreeView.EndUpdate();
+            return node;
+        }
         private void NewTaskButton_Click(object sender, EventArgs e) {
             var parentNode = outputTreeView.Nodes;
-            if(outputTreeView.SelectedNode != null) {
+            if (outputTreeView.SelectedNode != null) {
                 parentNode = outputTreeView.SelectedNode.Nodes;
             }
-            var newTaskNode = new TreeNode();
-            using (var TaskDialog = new TaskCreatorDialog(newTaskNode)) {
+            using (var TaskDialog = new TaskCreatorDialog()) {
                 TaskDialog.ShowDialog();
                 if (TaskDialog.DialogResult == DialogResult.Cancel)
                     return;
                 else if(TaskDialog.DialogResult == DialogResult.OK) {
-                    newTaskNode.Text = newTaskNode.Tag.ToString();
-                    outputTreeView.BeginUpdate();
-                    parentNode.Add(newTaskNode);
-                    // Nodes seem to be collapsed by default, 
-                    // this will make sure that the node will expand
-                    // if Parent is null then the node is a root node
-                    if(newTaskNode.Parent != null)
-                        newTaskNode.Parent.Expand();
+                    NewTaskNode(TaskDialog.Task, parentNode);
                     outputTreeView.SelectedNode = null;
-                    outputTreeView.EndUpdate();
                     unsaved = true;
                 }
             }
         }
         private void SerializeNodes(TreeNode node, StreamWriter treeFile, int depth) {
             var task = (GenericTask) node.Tag;
-            treeFile.WriteLine($"{depth} {task.Serialize()}");
+            treeFile.WriteLine(depth);
+            foreach(var str in task.Serialize()) {
+                treeFile.WriteLine(str);
+            }
             if(node.Nodes.Count != 0) {
                 foreach(TreeNode taskNode in node.Nodes) {
                     SerializeNodes(taskNode, treeFile, ++depth);
@@ -74,7 +83,6 @@ namespace Task_Organizer {
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void LoadButton_Click(object sender, EventArgs e) {
             if (unsaved) {
                 const string caption = "You have unsaved work!";
@@ -87,16 +95,36 @@ namespace Task_Organizer {
                 return;
             }
             try {
-                var treeFile = File.ReadAllText(openTreeFileDialog.FileName).Split('\n');
+                string[] delimiters = { "\r\n" };
+                var stinkyTreeFile = File.ReadAllText(openTreeFileDialog.FileName);
+                // I am going to lose my mind with these terrible carriage return chars...
+                var treeFile = stinkyTreeFile.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 if (treeFile[0] != "v0") {
                     throw new Exception("Invalid or incompatible file.");
                 }
                 outputTreeView.Nodes.Clear();
-                for (var i = 1; i < treeFile.Length; i++) {
-                    var depthEndIndex = treeFile[i].IndexOf(" ");
-                    var depth = int.Parse(treeFile[i].Substring(0, depthEndIndex));
-                    var nameSizeIndex = treeFile[i].IndexOf(" ", depthEndIndex + 1);
-                    var name = 
+                TreeNode lastNode = null;
+                var lastDepth = 0;
+                for (var i = 1; i < treeFile.Length - 1;) {
+                    var depth = int.Parse(treeFile[i++]);
+                    var type = treeFile[i++];
+                    var name = treeFile[i++];
+                    var desc = treeFile[i++];
+                    // TODO: Implement type checking here
+                    var task = new GenericTask(name, desc);
+                    if(depth == 0) {
+                        lastNode = NewTaskNode(task, outputTreeView.Nodes);
+                    }
+                    else if(depth > lastDepth) {
+                        lastNode = NewTaskNode(task, lastNode.Nodes);
+                    }
+                    else {
+                        for(int j = 0; j < lastDepth - depth; j++) {
+                            lastNode = lastNode.Parent;
+                        }
+                        lastNode = NewTaskNode(task, lastNode.Parent.Nodes);
+                    }
+                    lastDepth = depth;
                 }
             }
             catch(Exception ex) {
