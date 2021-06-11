@@ -54,7 +54,7 @@ namespace Task_Organizer {
             }
             if(node.Nodes.Count != 0) {
                 foreach(TreeNode taskNode in node.Nodes) {
-                    SerializeNodes(taskNode, treeFile, ++depth);
+                    SerializeNodes(taskNode, treeFile, depth + 1);
                 }
             }
         }
