@@ -30,28 +30,30 @@ namespace Task_Organizer {
             this.saveTreeFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.loadButton = new System.Windows.Forms.Button();
             this.openTreeFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.deleteTaskButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // newTaskButton
             // 
-            this.newTaskButton.Location = new System.Drawing.Point(321, 206);
+            this.newTaskButton.Location = new System.Drawing.Point(321, 114);
             this.newTaskButton.Name = "newTaskButton";
             this.newTaskButton.Size = new System.Drawing.Size(100, 21);
             this.newTaskButton.TabIndex = 3;
-            this.newTaskButton.Text = "New Subtask";
+            this.newTaskButton.Text = "New Task";
             this.newTaskButton.UseVisualStyleBackColor = true;
             this.newTaskButton.Click += new System.EventHandler(this.NewTaskButton_Click);
             // 
             // outputTreeView
             // 
-            this.outputTreeView.Location = new System.Drawing.Point(12, 98);
+            this.outputTreeView.Location = new System.Drawing.Point(12, 12);
             this.outputTreeView.Name = "outputTreeView";
             this.outputTreeView.Size = new System.Drawing.Size(303, 264);
             this.outputTreeView.TabIndex = 5;
+            this.outputTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.outputTreeView_NodeMouseDoubleClick);
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(321, 233);
+            this.saveButton.Location = new System.Drawing.Point(12, 282);
             this.saveButton.Name = "saveButton";
             this.saveButton.Size = new System.Drawing.Size(100, 23);
             this.saveButton.TabIndex = 6;
@@ -67,7 +69,7 @@ namespace Task_Organizer {
             // 
             // loadButton
             // 
-            this.loadButton.Location = new System.Drawing.Point(321, 262);
+            this.loadButton.Location = new System.Drawing.Point(118, 282);
             this.loadButton.Name = "loadButton";
             this.loadButton.Size = new System.Drawing.Size(100, 23);
             this.loadButton.TabIndex = 7;
@@ -80,17 +82,30 @@ namespace Task_Organizer {
             this.openTreeFileDialog.DefaultExt = "tof";
             this.openTreeFileDialog.FileName = "taskTree.tof";
             // 
+            // deleteTaskButton
+            // 
+            this.deleteTaskButton.Location = new System.Drawing.Point(321, 141);
+            this.deleteTaskButton.Name = "deleteTaskButton";
+            this.deleteTaskButton.Size = new System.Drawing.Size(100, 21);
+            this.deleteTaskButton.TabIndex = 8;
+            this.deleteTaskButton.Text = "Delete Task";
+            this.deleteTaskButton.UseVisualStyleBackColor = true;
+            this.deleteTaskButton.Click += new System.EventHandler(this.deleteTaskButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(483, 450);
+            this.ClientSize = new System.Drawing.Size(434, 321);
+            this.Controls.Add(this.deleteTaskButton);
             this.Controls.Add(this.loadButton);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.outputTreeView);
             this.Controls.Add(this.newTaskButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MinimumSize = new System.Drawing.Size(450, 360);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "Task Organizer";
             this.ResumeLayout(false);
 
         }
@@ -102,6 +117,7 @@ namespace Task_Organizer {
         private System.Windows.Forms.SaveFileDialog saveTreeFileDialog;
         private System.Windows.Forms.Button loadButton;
         private System.Windows.Forms.OpenFileDialog openTreeFileDialog;
+        private System.Windows.Forms.Button deleteTaskButton;
     }
 }
 

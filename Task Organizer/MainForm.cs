@@ -40,7 +40,7 @@ namespace Task_Organizer {
                 if (TaskDialog.DialogResult == DialogResult.Cancel)
                     return;
                 else if(TaskDialog.DialogResult == DialogResult.OK) {
-                    NewTaskNode(TaskDialog.Task, parentNode);
+                    _ = NewTaskNode(TaskDialog.Task, parentNode);
                     outputTreeView.SelectedNode = null;
                     unsaved = true;
                 }
@@ -67,6 +67,10 @@ namespace Task_Organizer {
                     return;
                 }
             }
+            SaveTree();
+        }
+
+        private void SaveTree() {
             if (saveTreeFileDialog.ShowDialog() != DialogResult.OK) {
                 return;
             }
@@ -79,7 +83,7 @@ namespace Task_Organizer {
                     unsaved = false;
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex) {
                 MessageBox.Show(ex.Message);
             }
         }
@@ -91,14 +95,17 @@ namespace Task_Organizer {
                     return;
                 }
             }
+            LoadTree();
+        }
+        private void LoadTree() {
             if (openTreeFileDialog.ShowDialog() != DialogResult.OK) {
                 return;
             }
             try {
-                string[] delimiters = { "\r\n" };
+                string[] delimiters = { Environment.NewLine };
                 var stinkyTreeFile = File.ReadAllText(openTreeFileDialog.FileName);
                 // I am going to lose my mind with these terrible carriage return chars...
-                var treeFile = stinkyTreeFile.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                var treeFile = stinkyTreeFile.Split(delimiters, StringSplitOptions.None);
                 if (treeFile[0] != "v0") {
                     throw new Exception("Invalid or incompatible file.");
                 }
@@ -112,14 +119,14 @@ namespace Task_Organizer {
                     var desc = treeFile[i++];
                     // TODO: Implement type checking here
                     var task = new GenericTask(name, desc);
-                    if(depth == 0) {
+                    if (depth == 0) {
                         lastNode = NewTaskNode(task, outputTreeView.Nodes);
                     }
-                    else if(depth > lastDepth) {
+                    else if (depth == lastDepth + 1) {
                         lastNode = NewTaskNode(task, lastNode.Nodes);
                     }
                     else {
-                        for(int j = 0; j < lastDepth - depth; j++) {
+                        for (int j = 0; j < lastDepth - depth; j++) {
                             lastNode = lastNode.Parent;
                         }
                         lastNode = NewTaskNode(task, lastNode.Parent.Nodes);
@@ -127,9 +134,25 @@ namespace Task_Organizer {
                     lastDepth = depth;
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex) {
                 MessageBox.Show(ex.Message);
                 MessageBox.Show("File loading failed. Sorry.");
+            }
+        }
+        private void outputTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
+
+        }
+
+        private void deleteTaskButton_Click(object sender, EventArgs e) {
+            if(outputTreeView.SelectedNode == null) {
+                MessageBox.Show("You have to select a message to delete.");
+                return;
+            }
+            if(outputTreeView.SelectedNode.Parent == null) {
+                outputTreeView.Nodes.Remove(outputTreeView.SelectedNode);
+            }
+            else {
+                outputTreeView.SelectedNode.Parent.Nodes.Remove(outputTreeView.SelectedNode);
             }
         }
     }
