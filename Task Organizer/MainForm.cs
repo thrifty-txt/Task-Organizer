@@ -139,21 +139,27 @@ namespace Task_Organizer {
                 MessageBox.Show("File loading failed. Sorry.");
             }
         }
-        private void outputTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
-
-        }
-
-        private void deleteTaskButton_Click(object sender, EventArgs e) {
-            if(outputTreeView.SelectedNode == null) {
+        private void DeleteTaskButton_Click(object sender, EventArgs e) {
+            if (outputTreeView.SelectedNode == null) {
                 MessageBox.Show("You have to select a message to delete.");
                 return;
             }
-            if(outputTreeView.SelectedNode.Parent == null) {
+            if (outputTreeView.SelectedNode.Parent == null) {
                 outputTreeView.Nodes.Remove(outputTreeView.SelectedNode);
             }
             else {
                 outputTreeView.SelectedNode.Parent.Nodes.Remove(outputTreeView.SelectedNode);
             }
+            unsaved = true;
+        }
+
+        private void OutputTreeView_DragDrop(object sender, DragEventArgs e) {
+
+        }
+
+        private void OutputTreeView_Click(object sender, EventArgs e) {
+            outputTreeView.SelectedNode = null;
+
         }
     }
 }
