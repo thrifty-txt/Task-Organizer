@@ -56,12 +56,14 @@ namespace Task_Organizer {
             // 
             // outputTreeView
             // 
+            this.outputTreeView.BackColor = System.Drawing.Color.LightGray;
             this.outputTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.outputTreeView.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.outputTreeView.Location = new System.Drawing.Point(0, 0);
             this.outputTreeView.Name = "outputTreeView";
             this.outputTreeView.Size = new System.Drawing.Size(479, 479);
             this.outputTreeView.TabIndex = 5;
+            this.outputTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.outputTreeView_NodeMouseDoubleClick);
             this.outputTreeView.Click += new System.EventHandler(this.OutputTreeView_Click);
             this.outputTreeView.DragDrop += new System.Windows.Forms.DragEventHandler(this.OutputTreeView_DragDrop);
             // 
@@ -80,6 +82,7 @@ namespace Task_Organizer {
             // 
             this.saveTreeFileDialog.DefaultExt = "tof";
             this.saveTreeFileDialog.FileName = "taskTree.tof";
+            this.saveTreeFileDialog.OverwritePrompt = false;
             this.saveTreeFileDialog.Title = "Save Task Organizer List";
             // 
             // loadButton
@@ -161,6 +164,7 @@ namespace Task_Organizer {
             this.MinimumSize = new System.Drawing.Size(450, 360);
             this.Name = "MainForm";
             this.Text = "Task Organizer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();

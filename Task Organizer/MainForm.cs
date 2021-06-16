@@ -23,7 +23,6 @@ namespace Task_Organizer {
             parent.Add(node);
             // Nodes seem to be collapsed by default, 
             // this will make sure that the node will expand
-            // if Parent is null then the node is a root node
             if (node.Parent != null) {
                 node.Parent.Expand();
             }
@@ -67,12 +66,12 @@ namespace Task_Organizer {
                     return;
                 }
             }
-            SaveTree();
+            _ = SaveTree();
         }
 
-        private void SaveTree() {
+        private bool SaveTree() {
             if (saveTreeFileDialog.ShowDialog() != DialogResult.OK) {
-                return;
+                return false;
             }
             try {
                 using (var treeFile = File.CreateText(saveTreeFileDialog.FileName)) {
@@ -81,10 +80,12 @@ namespace Task_Organizer {
                         SerializeNodes(taskNode, treeFile, 0);
                     }
                     unsaved = false;
+                    return true;
                 }
             }
             catch (Exception ex) {
                 MessageBox.Show(ex.Message);
+                return false;
             }
         }
         private void LoadButton_Click(object sender, EventArgs e) {
@@ -150,6 +151,7 @@ namespace Task_Organizer {
             else {
                 outputTreeView.SelectedNode.Parent.Nodes.Remove(outputTreeView.SelectedNode);
             }
+            outputTreeView.SelectedNode = null;
             unsaved = true;
         }
 
@@ -160,6 +162,33 @@ namespace Task_Organizer {
         private void OutputTreeView_Click(object sender, EventArgs e) {
             outputTreeView.SelectedNode = null;
 
+        }
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e) {
+            if (unsaved) {
+                const string caption = "You have unsaved work!";
+                const string text = "Do you want to save your work?";
+                var savePrompt = MessageBox.Show(text, caption, MessageBoxButtons.YesNoCancel);
+                if (savePrompt == DialogResult.Yes) {
+                    if(!SaveTree())
+                        e.Cancel = true;
+                }
+                else if(savePrompt == DialogResult.Cancel) {
+                    e.Cancel = true;
+                }
+            }
+        }
+
+        private void outputTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
+            using(var taskEditor = new TaskCreatorDialog(e.Node)) {
+                taskEditor.ShowDialog();
+                if (taskEditor.DialogResult == DialogResult.Cancel)
+                    return;
+                else if(taskEditor.DialogResult == DialogResult.OK) {
+                    e.Node.Text = e.Node.Tag.ToString();
+                    unsaved = true;
+                }
+                
+            }
         }
     }
 }

@@ -14,6 +14,14 @@ namespace Task_Organizer {
         public TaskCreatorDialog() {
             InitializeComponent();
         }
+        public TaskCreatorDialog(TreeNode node) {
+            InitializeComponent();
+            Task = node.Tag as GenericTask;
+            nameBox.Text = Task.Name;
+            descBox.Text = Task.Description;
+            Text = "Edit Task";
+            createButton.Text = "Update";
+        }
 
         private void CreateButton_Click(object sender, EventArgs e) {
             if (string.IsNullOrEmpty(nameBox.Text.Trim())) {
@@ -23,7 +31,13 @@ namespace Task_Organizer {
                 badUserPrompt.Visible = true;
                 return;
             }
-            Task = new GenericTask(nameBox.Text.Trim(), descBox.Text.Trim());
+            if (Task == null) {
+                Task = new GenericTask(nameBox.Text.Trim(), descBox.Text.Trim());
+            }
+            else {
+                Task.Name = nameBox.Text.Trim();
+                Task.Description = descBox.Text.Trim();
+            }
             DialogResult = DialogResult.OK;
             Close();
         }

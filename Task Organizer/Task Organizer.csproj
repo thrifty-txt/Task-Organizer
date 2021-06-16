@@ -46,12 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EditTaskDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="EditTaskDialog.Designer.cs">
-      <DependentUpon>EditTaskDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,9 +61,6 @@
     <Compile Include="TaskCreatorDialog.Designer.cs">
       <DependentUpon>TaskCreatorDialog.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="EditTaskDialog.resx">
-      <DependentUpon>EditTaskDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
