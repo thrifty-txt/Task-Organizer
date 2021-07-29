@@ -19,6 +19,8 @@ namespace Task_Organizer {
             Task = node.Tag as GenericTask;
             nameBox.Text = Task.Name;
             descBox.Text = Task.Description;
+            priorityTrackBar.Value = Task.Priority;
+            priorityValueDisplay.Text = Task.Priority.ToString();
             Text = "Edit Task";
             createButton.Text = "Update";
         }
@@ -32,11 +34,12 @@ namespace Task_Organizer {
                 return;
             }
             if (Task == null) {
-                Task = new GenericTask(nameBox.Text.Trim(), descBox.Text.Trim());
+                Task = new GenericTask(nameBox.Text.Trim(), descBox.Text.Trim(), priorityTrackBar.Value, DateTime.Now);
             }
             else {
                 Task.Name = nameBox.Text.Trim();
                 Task.Description = descBox.Text.Trim();
+                Task.Priority = priorityTrackBar.Value;
             }
             DialogResult = DialogResult.OK;
             Close();
@@ -45,6 +48,10 @@ namespace Task_Organizer {
         private void CancelButton_Click(object sender, EventArgs e) {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void priorityTrackBar_ValueChanged(object sender, EventArgs e) {
+            priorityValueDisplay.Text = priorityTrackBar.Value.ToString();
         }
     }
 }

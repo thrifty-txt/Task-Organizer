@@ -75,7 +75,7 @@ namespace Task_Organizer {
             }
             try {
                 using (var treeFile = File.CreateText(saveTreeFileDialog.FileName)) {
-                    treeFile.WriteLine("v0");
+                    treeFile.WriteLine("v1");
                     foreach (TreeNode taskNode in outputTreeView.Nodes) {
                         SerializeNodes(taskNode, treeFile, 0);
                     }
@@ -107,32 +107,15 @@ namespace Task_Organizer {
                 var stinkyTreeFile = File.ReadAllText(openTreeFileDialog.FileName);
                 // I am going to lose my mind with these terrible carriage return chars...
                 var treeFile = stinkyTreeFile.Split(delimiters, StringSplitOptions.None);
-                if (treeFile[0] != "v0") {
-                    throw new Exception("Invalid or incompatible file.");
-                }
-                outputTreeView.Nodes.Clear();
-                TreeNode lastNode = null;
-                var lastDepth = 0;
-                for (var i = 1; i < treeFile.Length - 1;) {
-                    var depth = int.Parse(treeFile[i++]);
-                    var type = treeFile[i++];
-                    var name = treeFile[i++];
-                    var desc = treeFile[i++];
-                    // TODO: Implement type checking here
-                    var task = new GenericTask(name, desc);
-                    if (depth == 0) {
-                        lastNode = NewTaskNode(task, outputTreeView.Nodes);
-                    }
-                    else if (depth == lastDepth + 1) {
-                        lastNode = NewTaskNode(task, lastNode.Nodes);
-                    }
-                    else {
-                        for (int j = 0; j < lastDepth - depth; j++) {
-                            lastNode = lastNode.Parent;
-                        }
-                        lastNode = NewTaskNode(task, lastNode.Parent.Nodes);
-                    }
-                    lastDepth = depth;
+                switch (treeFile[0]) {
+                    case "v0":
+                        Loadv0Tree(treeFile);
+                        break;
+                    case "v1":
+                        Loadv1Tree(treeFile);
+                        break;
+                    default:
+                        throw new Exception("Invalid or incompatible file.");
                 }
             }
             catch (Exception ex) {
@@ -140,6 +123,62 @@ namespace Task_Organizer {
                 MessageBox.Show("File loading failed. Sorry.");
             }
         }
+
+        private void Loadv0Tree(string[] treeFile) {
+            outputTreeView.Nodes.Clear();
+            TreeNode lastNode = null;
+            var lastDepth = 0;
+            for (var i = 1; i < treeFile.Length - 1;) {
+                var depth = int.Parse(treeFile[i++]);
+                var type = treeFile[i++];
+                var name = treeFile[i++];
+                var desc = treeFile[i++];
+                // TODO: Implement type checking here
+                var task = new GenericTask(name, desc, 0, DateTime.Now);
+                if (depth == 0) {
+                    lastNode = NewTaskNode(task, outputTreeView.Nodes);
+                }
+                else if (depth == lastDepth + 1) {
+                    lastNode = NewTaskNode(task, lastNode.Nodes);
+                }
+                else {
+                    for (int j = 0; j < lastDepth - depth; j++) {
+                        lastNode = lastNode.Parent;
+                    }
+                    lastNode = NewTaskNode(task, lastNode.Parent.Nodes);
+                }
+                lastDepth = depth;
+            }
+        }
+        private void Loadv1Tree(string[] treeFile) {
+            outputTreeView.Nodes.Clear();
+            TreeNode lastNode = null;
+            var lastDepth = 0;
+            for (var i = 1; i < treeFile.Length - 1;) {
+                var depth = int.Parse(treeFile[i++]);
+                var type = treeFile[i++];
+                var name = treeFile[i++];
+                var desc = treeFile[i++];
+                var prio = int.Parse(treeFile[i++]);
+                var dateCreated = DateTime.Parse(treeFile[i++]);
+                // TODO: Implement type checking here
+                var task = new GenericTask(name, desc, prio, dateCreated);
+                if (depth == 0) {
+                    lastNode = NewTaskNode(task, outputTreeView.Nodes);
+                }
+                else if (depth == lastDepth + 1) {
+                    lastNode = NewTaskNode(task, lastNode.Nodes);
+                }
+                else {
+                    for (int j = 0; j < lastDepth - depth; j++) {
+                        lastNode = lastNode.Parent;
+                    }
+                    lastNode = NewTaskNode(task, lastNode.Parent.Nodes);
+                }
+                lastDepth = depth;
+            }
+        }
+
         private void DeleteTaskButton_Click(object sender, EventArgs e) {
             if (outputTreeView.SelectedNode == null) {
                 MessageBox.Show("You have to select a message to delete.");

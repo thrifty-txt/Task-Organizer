@@ -30,6 +30,10 @@
             this.createButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.badUserPrompt = new System.Windows.Forms.Label();
+            this.priorityTrackBar = new System.Windows.Forms.TrackBar();
+            this.priorityLabel = new System.Windows.Forms.Label();
+            this.priorityValueDisplay = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.priorityTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // nameBox
@@ -66,7 +70,7 @@
             // 
             // createButton
             // 
-            this.createButton.Location = new System.Drawing.Point(53, 90);
+            this.createButton.Location = new System.Drawing.Point(53, 125);
             this.createButton.Name = "createButton";
             this.createButton.Size = new System.Drawing.Size(75, 23);
             this.createButton.TabIndex = 4;
@@ -76,7 +80,7 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(134, 90);
+            this.cancelButton.Location = new System.Drawing.Point(134, 125);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 5;
@@ -89,19 +93,50 @@
             this.badUserPrompt.AutoSize = true;
             this.badUserPrompt.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.badUserPrompt.ForeColor = System.Drawing.Color.Red;
-            this.badUserPrompt.Location = new System.Drawing.Point(70, 68);
+            this.badUserPrompt.Location = new System.Drawing.Point(12, 102);
             this.badUserPrompt.Name = "badUserPrompt";
             this.badUserPrompt.Size = new System.Drawing.Size(127, 13);
             this.badUserPrompt.TabIndex = 6;
             this.badUserPrompt.Text = "A Name is Required!!";
             this.badUserPrompt.Visible = false;
             // 
+            // priorityTrackBar
+            // 
+            this.priorityTrackBar.Location = new System.Drawing.Point(119, 68);
+            this.priorityTrackBar.Name = "priorityTrackBar";
+            this.priorityTrackBar.Size = new System.Drawing.Size(104, 45);
+            this.priorityTrackBar.TabIndex = 7;
+            this.priorityTrackBar.ValueChanged += new System.EventHandler(this.priorityTrackBar_ValueChanged);
+            // 
+            // priorityLabel
+            // 
+            this.priorityLabel.AutoSize = true;
+            this.priorityLabel.Location = new System.Drawing.Point(26, 77);
+            this.priorityLabel.Name = "priorityLabel";
+            this.priorityLabel.Size = new System.Drawing.Size(87, 13);
+            this.priorityLabel.TabIndex = 8;
+            this.priorityLabel.Text = "Priority (optional):";
+            // 
+            // priorityValueDisplay
+            // 
+            this.priorityValueDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.priorityValueDisplay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.priorityValueDisplay.Location = new System.Drawing.Point(158, 97);
+            this.priorityValueDisplay.Name = "priorityValueDisplay";
+            this.priorityValueDisplay.Size = new System.Drawing.Size(25, 23);
+            this.priorityValueDisplay.TabIndex = 9;
+            this.priorityValueDisplay.Text = "0";
+            this.priorityValueDisplay.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // TaskCreatorDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(274, 131);
+            this.ClientSize = new System.Drawing.Size(274, 160);
             this.Controls.Add(this.badUserPrompt);
+            this.Controls.Add(this.priorityValueDisplay);
+            this.Controls.Add(this.priorityLabel);
+            this.Controls.Add(this.priorityTrackBar);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.createButton);
             this.Controls.Add(this.descBox);
@@ -112,6 +147,7 @@
             this.MinimumSize = new System.Drawing.Size(290, 170);
             this.Name = "TaskCreatorDialog";
             this.Text = "Create a New Task";
+            ((System.ComponentModel.ISupportInitialize)(this.priorityTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -126,5 +162,8 @@
         private System.Windows.Forms.Button createButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label badUserPrompt;
+        private System.Windows.Forms.TrackBar priorityTrackBar;
+        private System.Windows.Forms.Label priorityLabel;
+        private System.Windows.Forms.Label priorityValueDisplay;
     }
 }
