@@ -229,5 +229,35 @@ namespace Task_Organizer {
                 
             }
         }
+
+        private void AlphaSortButton_Click(object sender, EventArgs e)
+        {
+            if (AlphaSortButton.Tag.ToString() == "Ascend")
+            {
+                outputTreeView.TreeViewNodeSorter = new AlphaTreeNodeASort();
+                outputTreeView.Sort();
+                unsaved = true;
+                AlphaSortButton.BackgroundImage = Properties.Resources.sort_alphabetical_descending;
+                AlphaSortButton.Tag = "Descend";
+            }
+            else
+            {
+                outputTreeView.TreeViewNodeSorter = new AlphaTreeNodeDSort();
+                outputTreeView.Sort();
+                AlphaSortButton.BackgroundImage = Properties.Resources.sort_alphabetical_ascending;
+                AlphaSortButton.Tag = "Ascend";
+            }
+        }
+
+        private void DateSortButton_Click(object sender, EventArgs e)
+        {
+            if (DateSortButton.Tag.ToString() == "Ascend")
+            {
+                outputTreeView.TreeViewNodeSorter = new DateTreeNodeASort();
+                outputTreeView.Sort();
+                DateSortButton.BackgroundImage = Properties.Resources.sort_calendar_descending;
+                DateSortButton.Tag = "Descend";
+            }
+        }
     }
 }

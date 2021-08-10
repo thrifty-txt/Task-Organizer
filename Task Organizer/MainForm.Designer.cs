@@ -24,6 +24,7 @@ namespace Task_Organizer {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.newTaskButton = new System.Windows.Forms.Button();
             this.outputTreeView = new System.Windows.Forms.TreeView();
             this.saveButton = new System.Windows.Forms.Button();
@@ -33,6 +34,10 @@ namespace Task_Organizer {
             this.deleteTaskButton = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.PrioSortButton = new System.Windows.Forms.Button();
+            this.DateSortButton = new System.Windows.Forms.Button();
+            this.AlphaSortButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -149,11 +154,52 @@ namespace Task_Organizer {
             // 
             // splitContainer2.Panel2
             // 
+            this.splitContainer2.Panel2.Controls.Add(this.PrioSortButton);
+            this.splitContainer2.Panel2.Controls.Add(this.DateSortButton);
+            this.splitContainer2.Panel2.Controls.Add(this.AlphaSortButton);
             this.splitContainer2.Panel2.Controls.Add(this.newTaskButton);
             this.splitContainer2.Panel2.Controls.Add(this.deleteTaskButton);
             this.splitContainer2.Size = new System.Drawing.Size(602, 537);
             this.splitContainer2.SplitterDistance = 485;
             this.splitContainer2.TabIndex = 10;
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
+            // 
+            // PrioSortButton
+            // 
+            this.PrioSortButton.BackgroundImage = global::Task_Organizer.Properties.Resources.sort_numeric_ascending;
+            this.PrioSortButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.PrioSortButton.Location = new System.Drawing.Point(73, 22);
+            this.PrioSortButton.Name = "PrioSortButton";
+            this.PrioSortButton.Size = new System.Drawing.Size(30, 30);
+            this.PrioSortButton.TabIndex = 10;
+            this.PrioSortButton.UseVisualStyleBackColor = true;
+            // 
+            // DateSortButton
+            // 
+            this.DateSortButton.BackgroundImage = global::Task_Organizer.Properties.Resources.sort_calendar_ascending;
+            this.DateSortButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.DateSortButton.Location = new System.Drawing.Point(39, 22);
+            this.DateSortButton.Name = "DateSortButton";
+            this.DateSortButton.Size = new System.Drawing.Size(30, 30);
+            this.DateSortButton.TabIndex = 9;
+            this.DateSortButton.UseVisualStyleBackColor = true;
+            this.DateSortButton.Click += new System.EventHandler(this.DateSortButton_Click);
+            // 
+            // AlphaSortButton
+            // 
+            this.AlphaSortButton.BackgroundImage = global::Task_Organizer.Properties.Resources.sort_alphabetical_ascending;
+            this.AlphaSortButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.AlphaSortButton.Location = new System.Drawing.Point(3, 22);
+            this.AlphaSortButton.Name = "AlphaSortButton";
+            this.AlphaSortButton.Size = new System.Drawing.Size(30, 30);
+            this.AlphaSortButton.TabIndex = 6;
+            this.AlphaSortButton.Tag = "Ascend";
+            this.AlphaSortButton.UseVisualStyleBackColor = true;
+            this.AlphaSortButton.Click += new System.EventHandler(this.AlphaSortButton_Click);
             // 
             // MainForm
             // 
@@ -187,6 +233,10 @@ namespace Task_Organizer {
         private System.Windows.Forms.Button deleteTaskButton;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.Button AlphaSortButton;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.Button PrioSortButton;
+        private System.Windows.Forms.Button DateSortButton;
     }
 }
 
