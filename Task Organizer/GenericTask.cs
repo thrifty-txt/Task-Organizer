@@ -17,14 +17,9 @@ namespace Task_Organizer {
             Priority = priority;
             DateCreated = dateCreated;
         }
-        public override String ToString() {
-            string output = Name;
-            if (!string.IsNullOrEmpty(Description)) {
-                output += $": {Description}";
-            }
-            return output.Trim();
-        }
-        public String[] Serialize() {
+        public override string ToString() => $"{Name}".Trim();
+        public string GetToolTip() => Priority > 0 ? $"{Description} | Priority: {Priority}".Trim() : Description;
+        public string[] Serialize() {
             return new string[] { TaskType, Name, Description, Priority.ToString(), DateCreated.ToString() };
         }
     }

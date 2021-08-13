@@ -16,8 +16,10 @@ namespace Task_Organizer {
             InitializeComponent();
         }
         private TreeNode NewTaskNode(GenericTask task, TreeNodeCollection parent) {
-            var node = new TreeNode(task.ToString()) {
-                Tag = task
+            var node = new TreeNode() {
+                Tag = task,
+                Text = task.ToString(),
+                ToolTipText = task.GetToolTip()
             };
             outputTreeView.BeginUpdate();
             parent.Add(node);
@@ -108,9 +110,6 @@ namespace Task_Organizer {
                 // I am going to lose my mind with these terrible carriage return chars...
                 var treeFile = stinkyTreeFile.Split(delimiters, StringSplitOptions.None);
                 switch (treeFile[0]) {
-                    case "v0":
-                        Loadv0Tree(treeFile);
-                        break;
                     case "v1":
                         Loadv1Tree(treeFile);
                         break;
@@ -124,32 +123,6 @@ namespace Task_Organizer {
             }
         }
 
-        private void Loadv0Tree(string[] treeFile) {
-            outputTreeView.Nodes.Clear();
-            TreeNode lastNode = null;
-            var lastDepth = 0;
-            for (var i = 1; i < treeFile.Length - 1;) {
-                var depth = int.Parse(treeFile[i++]);
-                var type = treeFile[i++];
-                var name = treeFile[i++];
-                var desc = treeFile[i++];
-                // TODO: Implement type checking here
-                var task = new GenericTask(name, desc, 0, DateTime.Now);
-                if (depth == 0) {
-                    lastNode = NewTaskNode(task, outputTreeView.Nodes);
-                }
-                else if (depth == lastDepth + 1) {
-                    lastNode = NewTaskNode(task, lastNode.Nodes);
-                }
-                else {
-                    for (int j = 0; j < lastDepth - depth; j++) {
-                        lastNode = lastNode.Parent;
-                    }
-                    lastNode = NewTaskNode(task, lastNode.Parent.Nodes);
-                }
-                lastDepth = depth;
-            }
-        }
         private void Loadv1Tree(string[] treeFile) {
             outputTreeView.Nodes.Clear();
             TreeNode lastNode = null;
@@ -223,7 +196,9 @@ namespace Task_Organizer {
                 if (taskEditor.DialogResult == DialogResult.Cancel)
                     return;
                 else if(taskEditor.DialogResult == DialogResult.OK) {
-                    e.Node.Text = e.Node.Tag.ToString();
+                    GenericTask task = e.Node.Tag as GenericTask;
+                    e.Node.Text = task.ToString();
+                    e.Node.ToolTipText = task.GetToolTip();
                     unsaved = true;
                 }
                 
@@ -257,6 +232,27 @@ namespace Task_Organizer {
                 outputTreeView.Sort();
                 DateSortButton.BackgroundImage = Properties.Resources.sort_calendar_descending;
                 DateSortButton.Tag = "Descend";
+            }
+            else {
+                outputTreeView.TreeViewNodeSorter = new DateTreeNodeDSort();
+                outputTreeView.Sort();
+                DateSortButton.BackgroundImage = Properties.Resources.sort_calendar_ascending;
+                DateSortButton.Tag = "Ascend";
+            }
+        }
+
+        private void PrioSortButton_Click(object sender, EventArgs e) {
+            if(PrioSortButton.Tag.ToString() == "Ascend") {
+                outputTreeView.TreeViewNodeSorter = new PriorityTreeNodeASort();
+                outputTreeView.Sort();
+                PrioSortButton.BackgroundImage = Properties.Resources.sort_numeric_descending;
+                PrioSortButton.Tag = "Descend";
+            }
+            else {
+                outputTreeView.TreeViewNodeSorter = new PriorityTreeNodeDSort();
+                outputTreeView.Sort();
+                PrioSortButton.BackgroundImage = Properties.Resources.sort_numeric_ascending;
+                PrioSortButton.Tag = "Ascend";
             }
         }
     }

@@ -34,10 +34,10 @@ namespace Task_Organizer {
             this.deleteTaskButton = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.PrioSortButton = new System.Windows.Forms.Button();
             this.DateSortButton = new System.Windows.Forms.Button();
             this.AlphaSortButton = new System.Windows.Forms.Button();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -66,6 +66,7 @@ namespace Task_Organizer {
             this.outputTreeView.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.outputTreeView.Location = new System.Drawing.Point(0, 0);
             this.outputTreeView.Name = "outputTreeView";
+            this.outputTreeView.ShowNodeToolTips = true;
             this.outputTreeView.Size = new System.Drawing.Size(479, 479);
             this.outputTreeView.TabIndex = 5;
             this.outputTreeView.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.outputTreeView_NodeMouseDoubleClick);
@@ -163,11 +164,6 @@ namespace Task_Organizer {
             this.splitContainer2.SplitterDistance = 485;
             this.splitContainer2.TabIndex = 10;
             // 
-            // notifyIcon1
-            // 
-            this.notifyIcon1.Text = "notifyIcon1";
-            this.notifyIcon1.Visible = true;
-            // 
             // PrioSortButton
             // 
             this.PrioSortButton.BackgroundImage = global::Task_Organizer.Properties.Resources.sort_numeric_ascending;
@@ -176,7 +172,9 @@ namespace Task_Organizer {
             this.PrioSortButton.Name = "PrioSortButton";
             this.PrioSortButton.Size = new System.Drawing.Size(30, 30);
             this.PrioSortButton.TabIndex = 10;
+            this.PrioSortButton.Tag = "Ascend";
             this.PrioSortButton.UseVisualStyleBackColor = true;
+            this.PrioSortButton.Click += new System.EventHandler(this.PrioSortButton_Click);
             // 
             // DateSortButton
             // 
@@ -186,6 +184,7 @@ namespace Task_Organizer {
             this.DateSortButton.Name = "DateSortButton";
             this.DateSortButton.Size = new System.Drawing.Size(30, 30);
             this.DateSortButton.TabIndex = 9;
+            this.DateSortButton.Tag = "Ascend";
             this.DateSortButton.UseVisualStyleBackColor = true;
             this.DateSortButton.Click += new System.EventHandler(this.DateSortButton_Click);
             // 
@@ -200,6 +199,11 @@ namespace Task_Organizer {
             this.AlphaSortButton.Tag = "Ascend";
             this.AlphaSortButton.UseVisualStyleBackColor = true;
             this.AlphaSortButton.Click += new System.EventHandler(this.AlphaSortButton_Click);
+            // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.Visible = true;
             // 
             // MainForm
             // 
