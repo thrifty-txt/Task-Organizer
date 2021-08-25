@@ -11,25 +11,26 @@ using System.IO;
 
 namespace Task_Organizer {
     public partial class MainForm : Form {
+        // must be updated when we modify the tree or save it
         private bool unsaved = false;
         public MainForm() {
             InitializeComponent();
         }
         private TreeNode NewTaskNode(GenericTask task, TreeNodeCollection parent) {
-            var node = new TreeNode() {
+            var newNode = new TreeNode() {
                 Tag = task,
                 Text = task.ToString(),
                 ToolTipText = task.GetToolTip()
             };
             outputTreeView.BeginUpdate();
-            parent.Add(node);
+            parent.Add(newNode);
             // Nodes seem to be collapsed by default, 
             // this will make sure that the node will expand
-            if (node.Parent != null) {
-                node.Parent.Expand();
+            if (newNode.Parent != null) {
+                newNode.Parent.Expand();
             }
             outputTreeView.EndUpdate();
-            return node;
+            return newNode;
         }
         private void NewTaskButton_Click(object sender, EventArgs e) {
             var parentNode = outputTreeView.Nodes;
@@ -42,17 +43,20 @@ namespace Task_Organizer {
                     return;
                 else if(TaskDialog.DialogResult == DialogResult.OK) {
                     _ = NewTaskNode(TaskDialog.Task, parentNode);
+                    // reset selected node for visual purposes
                     outputTreeView.SelectedNode = null;
                     unsaved = true;
                 }
             }
         }
         private void SerializeNodes(TreeNode node, StreamWriter treeFile, int depth) {
-            var task = (GenericTask) node.Tag;
+            var task = node.Tag as GenericTask;
             treeFile.WriteLine(depth);
+            // get data to serialize from object itself
             foreach(var str in task.Serialize()) {
                 treeFile.WriteLine(str);
             }
+            // recursively serialize all children of node
             if(node.Nodes.Count != 0) {
                 foreach(TreeNode taskNode in node.Nodes) {
                     SerializeNodes(taskNode, treeFile, depth + 1);
@@ -68,6 +72,7 @@ namespace Task_Organizer {
                     return;
                 }
             }
+            // we don't care about the return value here
             _ = SaveTree();
         }
 
@@ -77,7 +82,9 @@ namespace Task_Organizer {
             }
             try {
                 using (var treeFile = File.CreateText(saveTreeFileDialog.FileName)) {
+                    // current version marker
                     treeFile.WriteLine("v1");
+                    // serialize each top level node, which will recursively serialize their children
                     foreach (TreeNode taskNode in outputTreeView.Nodes) {
                         SerializeNodes(taskNode, treeFile, 0);
                     }
@@ -105,11 +112,12 @@ namespace Task_Organizer {
                 return;
             }
             try {
+                // we want to split on newlines, which are different on unix and windows
                 string[] delimiters = { Environment.NewLine };
-                var stinkyTreeFile = File.ReadAllText(openTreeFileDialog.FileName);
-                // I am going to lose my mind with these terrible carriage return chars...
-                var treeFile = stinkyTreeFile.Split(delimiters, StringSplitOptions.None);
+                var dirtyTreeFile = File.ReadAllText(openTreeFileDialog.FileName);
+                var treeFile = dirtyTreeFile.Split(delimiters, StringSplitOptions.None);
                 switch (treeFile[0]) {
+                    // check if correct version marker is there
                     case "v1":
                         Loadv1Tree(treeFile);
                         break;
@@ -128,6 +136,9 @@ namespace Task_Organizer {
             TreeNode lastNode = null;
             var lastDepth = 0;
             for (var i = 1; i < treeFile.Length - 1;) {
+                // each field of data is on a new line,
+                // so we iterate through the lines inside the loop
+                // after reading each variable
                 var depth = int.Parse(treeFile[i++]);
                 var type = treeFile[i++];
                 var name = treeFile[i++];
@@ -136,12 +147,16 @@ namespace Task_Organizer {
                 var dateCreated = DateTime.Parse(treeFile[i++]);
                 // TODO: Implement type checking here
                 var task = new GenericTask(name, desc, prio, dateCreated);
+                // if depth is 0 it is a top level node
+                // and has to be put directly into the TreeView
                 if (depth == 0) {
                     lastNode = NewTaskNode(task, outputTreeView.Nodes);
                 }
                 else if (depth == lastDepth + 1) {
                     lastNode = NewTaskNode(task, lastNode.Nodes);
                 }
+                // iterate through Parents to get the correct Parent to add to
+                // if depth == lastDepth they are siblings
                 else {
                     for (int j = 0; j < lastDepth - depth; j++) {
                         lastNode = lastNode.Parent;
@@ -204,7 +219,7 @@ namespace Task_Organizer {
                 
             }
         }
-
+        // for each of these we switch between Ascend and Descend modes
         private void AlphaSortButton_Click(object sender, EventArgs e)
         {
             if (AlphaSortButton.Tag.ToString() == "Ascend")
