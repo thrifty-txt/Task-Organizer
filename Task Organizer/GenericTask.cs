@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Task_Organizer {
     public class GenericTask {
@@ -17,10 +13,10 @@ namespace Task_Organizer {
             Priority = priority;
             DateCreated = dateCreated;
         }
+        // all of these functions can and will be overriden in sub-classes
+        // used to fill TreeNode Text value
         public override string ToString() => $"{Name}".Trim();
         public string GetToolTip() => Priority > 0 ? $"{Description} | Priority: {Priority}".Trim() : Description;
-        public string[] Serialize() {
-            return new string[] { TaskType, Name, Description, Priority.ToString(), DateCreated.ToString() };
-        }
+        public string[] Serialize() => new string[] { TaskType, Name, Description, Priority.ToString(), DateCreated.ToString() };
     }
 }

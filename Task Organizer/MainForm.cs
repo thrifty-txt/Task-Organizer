@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Task_Organizer {
     public partial class MainForm : Form {
@@ -41,7 +34,7 @@ namespace Task_Organizer {
                 TaskDialog.ShowDialog();
                 if (TaskDialog.DialogResult == DialogResult.Cancel)
                     return;
-                else if(TaskDialog.DialogResult == DialogResult.OK) {
+                else if (TaskDialog.DialogResult == DialogResult.OK) {
                     _ = NewTaskNode(TaskDialog.Task, parentNode);
                     // reset selected node for visual purposes
                     outputTreeView.SelectedNode = null;
@@ -53,12 +46,12 @@ namespace Task_Organizer {
             var task = node.Tag as GenericTask;
             treeFile.WriteLine(depth);
             // get data to serialize from object itself
-            foreach(var str in task.Serialize()) {
+            foreach (var str in task.Serialize()) {
                 treeFile.WriteLine(str);
             }
             // recursively serialize all children of node
-            if(node.Nodes.Count != 0) {
-                foreach(TreeNode taskNode in node.Nodes) {
+            if (node.Nodes.Count != 0) {
+                foreach (TreeNode taskNode in node.Nodes) {
                     SerializeNodes(taskNode, treeFile, depth + 1);
                 }
             }
@@ -196,42 +189,39 @@ namespace Task_Organizer {
                 const string text = "Do you want to save your work?";
                 var savePrompt = MessageBox.Show(text, caption, MessageBoxButtons.YesNoCancel);
                 if (savePrompt == DialogResult.Yes) {
-                    if(!SaveTree())
+                    if (!SaveTree())
                         e.Cancel = true;
                 }
-                else if(savePrompt == DialogResult.Cancel) {
+                else if (savePrompt == DialogResult.Cancel) {
                     e.Cancel = true;
                 }
             }
         }
 
         private void outputTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e) {
-            using(var taskEditor = new TaskCreatorDialog(e.Node)) {
+            using (var taskEditor = new TaskCreatorDialog(e.Node)) {
                 taskEditor.ShowDialog();
                 if (taskEditor.DialogResult == DialogResult.Cancel)
                     return;
-                else if(taskEditor.DialogResult == DialogResult.OK) {
+                else if (taskEditor.DialogResult == DialogResult.OK) {
                     GenericTask task = e.Node.Tag as GenericTask;
                     e.Node.Text = task.ToString();
                     e.Node.ToolTipText = task.GetToolTip();
                     unsaved = true;
                 }
-                
+
             }
         }
-        // for each of these we switch between Ascend and Descend modes
-        private void AlphaSortButton_Click(object sender, EventArgs e)
-        {
-            if (AlphaSortButton.Tag.ToString() == "Ascend")
-            {
+        // for each of these we switch between Ascending and Descending sort modes on click
+        private void AlphaSortButton_Click(object sender, EventArgs e) {
+            if (AlphaSortButton.Tag.ToString() == "Ascend") {
                 outputTreeView.TreeViewNodeSorter = new AlphaTreeNodeASort();
                 outputTreeView.Sort();
                 unsaved = true;
                 AlphaSortButton.BackgroundImage = Properties.Resources.sort_alphabetical_descending;
                 AlphaSortButton.Tag = "Descend";
             }
-            else
-            {
+            else {
                 outputTreeView.TreeViewNodeSorter = new AlphaTreeNodeDSort();
                 outputTreeView.Sort();
                 AlphaSortButton.BackgroundImage = Properties.Resources.sort_alphabetical_ascending;
@@ -239,10 +229,8 @@ namespace Task_Organizer {
             }
         }
 
-        private void DateSortButton_Click(object sender, EventArgs e)
-        {
-            if (DateSortButton.Tag.ToString() == "Ascend")
-            {
+        private void DateSortButton_Click(object sender, EventArgs e) {
+            if (DateSortButton.Tag.ToString() == "Ascend") {
                 outputTreeView.TreeViewNodeSorter = new DateTreeNodeASort();
                 outputTreeView.Sort();
                 DateSortButton.BackgroundImage = Properties.Resources.sort_calendar_descending;
@@ -257,7 +245,7 @@ namespace Task_Organizer {
         }
 
         private void PrioSortButton_Click(object sender, EventArgs e) {
-            if(PrioSortButton.Tag.ToString() == "Ascend") {
+            if (PrioSortButton.Tag.ToString() == "Ascend") {
                 outputTreeView.TreeViewNodeSorter = new PriorityTreeNodeASort();
                 outputTreeView.Sort();
                 PrioSortButton.BackgroundImage = Properties.Resources.sort_numeric_descending;
